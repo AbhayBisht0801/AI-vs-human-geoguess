@@ -135,3 +135,17 @@ def decodeImage(imgstring, fileName):
 def encodeImageIntoBase64(croppedImagePath):
     with open(croppedImagePath, "rb") as f:
         return base64.b64encode(f.read())
+def normalize_lat(lat):
+    lat_norm = (lat + 90) / 180
+
+    return lat_norm
+def normalize_long(lon):
+  lon_norm = (lon + 180) / 360
+  return lon_norm
+def denormalize_lat(lat_norm):
+  lat = (lat_norm * 180) - 90
+
+  return lat
+def denormalize_lon(lon_norm):
+  lon = (lon_norm * 360) - 180
+  return lon

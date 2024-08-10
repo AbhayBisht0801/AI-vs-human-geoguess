@@ -1,7 +1,7 @@
 from AI_Vs_Human_Geoguess.constants import *
 from AI_Vs_Human_Geoguess.utils.common import read_yaml,create_directories
-from AI_Vs_Human_Geoguess.entity.config_entity import DataIngestionConfig,PrepareBaseModelConfig
-
+from AI_Vs_Human_Geoguess.entity.config_entity import DataIngestionConfig,PrepareBaseModelConfig,PrepareTrainingConfig
+import os
 
     
 class ConfigurationManager:
@@ -47,3 +47,20 @@ class ConfigurationManager:
             
         )
         return prepare_base_model_config
+    def get_training_config(self) -> PrepareTrainingConfig:
+        training=self.config.training
+        prepare_base_model=self.config.prepare_base_model
+        params=self.params
+        training_data=os.path.join(self.config.data_ingestion.unzip_dir,'dataset')
+        create_directories([Path(training.root_dir)])
+
+        training_config=PrepareTrainingConfig(
+            root_dir=Path(training.root_dir),
+            trained_model_path=Path(training.trained_model_path),
+            updated_base_model=Path(prepare_base_model.updated_base_model_path),
+            training_data=Path(training_data),
+            params_epochs=params.EPOCHS,
+            params_batch_size=params.BATCH_SIZE,
+            params_image_size=params.IMAGE_SIZE
+        )
+        return training_config

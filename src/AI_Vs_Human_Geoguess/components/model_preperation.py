@@ -4,6 +4,8 @@ import zipfile
 import gdown
 from AI_Vs_Human_Geoguess import logger
 from AI_Vs_Human_Geoguess.utils.common import get_size
+from  pathlib import Path
+
 import pandas as pd
 import tensorflow as tf
 class PrepareBaseModel:

@@ -1,24 +1,22 @@
+from AI_Vs_Human_Geoguess.components.model_trainer import Training
 from AI_Vs_Human_Geoguess.config.configuration import ConfigurationManager
-from AI_Vs_Human_Geoguess.components.data_ingestion import DataIngestion
 from AI_Vs_Human_Geoguess import logger
-
-STAGE_NAME='Data Ingestion Stage'
-
-class DataIngestionTrainingPipeline:
+STAGE_NAME='Model traning'
+class ModelTrainingPipeline:
     def __init__(self):
         pass
     def main(self):
         config=ConfigurationManager()
-        data_ingestion_config=config.get_data_ingestion_config()
-        dataingestion=DataIngestion(config=data_ingestion_config)
-        dataingestion.download_file()
-        dataingestion.extract_zip_file()
-        dataingestion.preprocess_data()
-
+        training_config=config.get_training_config()
+        training=Training(config=training_config)
+        training.get_base_model()
+        training.train_validation_generator()
+        training.train()
+    
 if __name__=='__main__':
     try:
         logger.info(f">>>>>>stage {STAGE_NAME} started<<<<<<")
-        obj=DataIngestionTrainingPipeline()
+        obj=ModelTrainingPipeline()
         obj.main()
         logger.info(f">>>>>>stage {STAGE_NAME} completed<<<<<<")
     except Exception as e:

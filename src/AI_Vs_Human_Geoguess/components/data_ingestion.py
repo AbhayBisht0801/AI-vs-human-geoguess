@@ -2,7 +2,7 @@ import os
 import zipfile
 import gdown
 from AI_Vs_Human_Geoguess import logger
-from AI_Vs_Human_Geoguess.utils.common import get_size
+from AI_Vs_Human_Geoguess.utils.common import get_size,normalize_lat,normalize_long
 import pandas as pd
 from AI_Vs_Human_Geoguess.entity.config_entity import DataIngestionConfig
 
@@ -26,4 +26,18 @@ class DataIngestion:
         os.makedirs(unzip_path,exist_ok=True)
         with zipfile.ZipFile(self.config.local_data_file,'r') as zip_ref:
             zip_ref.extractall(unzip_path)
+    def preprocess_data(self):
+        data=pd.read_csv(os.path.join(self.config.unzip_dir,'dataset\coords.csv'),header=None)
+        data.rename(columns={0:'latitude',1:'longitude'},inplace=True)
+        image=[]
+        for i in (os.listdir(os.path.join(self.config.unzip_dir,'dataset'))):
+            if i.endswith('.png'):
+                image.append(i)
+        
+        data['image']=np.array(sorted(image,key=lambda x:int(x.split('.')[0])))
+        data.rename(columns={0:'latitude',1:'longitude'},inplace=True)
+        data['normalized_lat']=data['latitude'].apply(normalize_lat)
+        data['normalized_long']=data['longitude'].apply(normalize_long)
+        data.to_csv(os.path.join(self.config.unzip_dir,'dataset\coords.csv'))
+        
    
