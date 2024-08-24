@@ -9,9 +9,14 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 import base64
+import random
+import pandas as pd
+import cv2 as cv
+import numpy as np
+from keras.models import load_model
 
 
-
+paths='artifacts\data_ingestion\dataset'
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
     """reads yaml file and returns
@@ -149,3 +154,25 @@ def denormalize_lat(lat_norm):
 def denormalize_lon(lon_norm):
   lon = (lon_norm * 360) - 180
   return lon
+def generate_image(paths='artifacts\data_ingestion\dataset'):
+    path=paths
+    files=os.listdir(paths)
+    images=[i for i in files if i.endswith('.png')  ]
+    return random.choice(images)
+def actual_coords(path):
+    index=path.split('.')[0]
+    df=pd.read_csv('artifacts\data_ingestion\dataset\coords.csv')
+    data=df.iloc[int(index),:]
+    lat,lon=data['latitude'],data['longitude']
+    
+    return lat,lon
+
+def model_predictions(img):
+    image=cv.imread(os.path.join('artifacts\data_ingestion\dataset',img))
+    resized_img=cv.resize(image,(180,180))
+    image=resized_img/255
+    image=np.expand_dims(image,axis=0)
+    print(image.shape)
+    model=load_model('artifacts\\training\\model.keras')
+    result=model.predict(image)
+    return result[0][0],result[0][1]

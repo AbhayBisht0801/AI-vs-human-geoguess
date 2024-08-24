@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map with Coordinates and Markers</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh; /* Adjust height as needed */
+            width: 100%; /* Full width */
+        }
+        #coords {
+            padding: 10px;
+            font-size: 16px;
+            background: #fff;
+            border: 1px solid #ddd;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .marker-popup {
+            background-color: #ffffff;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .smiley-icon {
+            width: 32px; /* Adjust the size of the smiley icon */
+            height: 32px;
+            background-color: yellow;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-size: 20px;
+        }
+        .smiley-icon::before {
+            content: "😊"; /* Smiley face character */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="coords">Click on the map to get coordinates.</div>
+ 
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the map
+            const map = L.map('map').setView([0, 0], 2); // Center on the world, zoom level 2
+ 
+            // Add a tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            const smileyIcon = L.divIcon({
+                className: 'smiley-icon',
+                iconSize: [32, 32] // Size of the icon
+            });
+            
+            // Get coordinates from the server or set default values
+            const actualLat = parseFloat('{{ actual_lat }}') || 0;
+            const actualLon = parseFloat('{{ actual_lon }}') || 0;
+            const Lat = parseFloat('{{ lat }}') || 0;
+            const Lon = parseFloat('{{ lng }}') || 0;
+ 
+            // Add marker for actual coordinates
+            const actualMarker = L.marker([actualLat, actualLon]).addTo(map)
+                .bindPopup('Actual Coordinates: Latitude: ' + actualLat + ', Longitude: ' + actualLon)
+                .openPopup();
+ 
+            // Add marker for model prediction coordinates with custom icon
+            const userMarker = L.marker([Lat, Lon], { icon: smileyIcon }).addTo(map)
+                .bindPopup('Your Prediction: Latitude: ' + Lat + ', Longitude: ' + Lon);
+            
+            // Define a dotted line style
+            const dottedLineStyle = {
+                color: '#ff7800',
+                weight: 2,
+                opacity: 0.7,
+                dashArray: '10, 10' // Dotted line pattern
+            };
+
+            // Draw a dotted line from actual to user marker
+            L.polyline([[actualLat, actualLon], [Lat, Lon]], dottedLineStyle).addTo(map);
+        });
+    </script>
+    <script>
+        // Redirect after 5 seconds
+        setTimeout(function() {
+            window.location.href = "{{ url_for('target') }}";
+        }, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 20px;">
+    {% if result %}
+        <img src="{{ result }}" alt="Location Image" height="400" width="700" style="border: 2px solid #4CAF50;">
+        <div style="margin-top: 20px;">
+            
+            <form action="{{ url_for('map') }}" method="GET" style="display: inline-block;">
+                <input type="hidden" name="source" value="single_player">
+                <button type="submit" style="padding: 8px 16px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">Select Through Map</button>
+            </form>
+        </div>
+    {% else %}
+        <p style="font-size: 18px; color: #666;">Click the button below to generate an image.</p>
+    {% endif %}
+</div>
+<div style="text-align: center; margin-top: 30px;">
+    <form method="POST">
+        <button type="submit" name="generate" style="padding: 10px 20px; background-color: #FF5722; color: white; border: none; cursor: pointer; font-size: 18px;">Generate Image</button>
+    </form>
+</div>
+{% endblock %}

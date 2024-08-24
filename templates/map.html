@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map with Coordinates and Markers</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh; /* Adjust height as needed */
+            width: 100%; /* Full width */
+        }
+        #coords {
+            padding: 10px;
+            font-size: 16px;
+            background: #fff;
+            border: 1px solid #ddd;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+        }.smiley-icon {
+            width: 32px; /* Adjust the size of the smiley icon */
+            height: 32px;
+            background-color: yellow;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-size: 20px;
+        }
+        .smiley-icon::before {
+            content: "😊"; /* Smiley face character */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="coords">Click on the map to get coordinates.</div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const map = L.map('map').setView([0, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            let currentMarker = null;
+            const smileyIcon = L.divIcon({
+                className: 'smiley-icon',
+                iconSize: [32, 32] // Size of the icon
+            });
+
+            // Define custom icon
+            
+   
+
+
+            function onMapClick(e) {
+                const coordsDiv = document.getElementById('coords');
+                const lat = e.latlng.lat.toFixed(5);
+                const lng = e.latlng.lng.toFixed(5);
+
+                coordsDiv.innerHTML = `Latitude: ${lat} <br> Longitude: ${lng}`;
+
+                if (currentMarker) {
+                    map.removeLayer(currentMarker);
+                }
+
+                currentMarker = L.marker([lat, lng], { icon: smileyIcon }).addTo(map);
+
+                console.log('Sending:', { lat: lat, lng: lng }); // Debugging
+
+                fetch('/save-coordinates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ lat: lat, lng: lng }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server Response:', data);
+                })
+                .catch((error) => {
+                    console.error('Fetch Error:', error);
+                });
+            }
+
+            map.on('click', onMapClick);
+        });
+    </script>
+    <form action="{{ url_for('result') }}" method="GET">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

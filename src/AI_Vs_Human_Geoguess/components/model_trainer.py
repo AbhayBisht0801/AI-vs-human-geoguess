@@ -56,7 +56,13 @@ class Training:
             epochs=self.config.params_epochs,
             steps_per_epoch=self.steps_per_epoch,
             validation_steps=self.validation_steps,
-            validation_data=self.valid_generator
+            validation_data=self.valid_generator,
+            callbacks=tf.keras.callbacks.ModelCheckpoint('content/best_model/model.keras', save_best_only=True, monitor='val_loss', mode='min')
+            
+
+
+
+
         )
 
         self.save_model(
