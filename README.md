@@ -10,6 +10,12 @@ Welcome to my GeoGuessr-inspired project! This application allows you to explore
 - **Modular Codebase**: The project is built with modular code, making it easy to understand, extend, and maintain.
 - **Local Deployment**: The entire application is deployed locally using Flask.
 
+## Demo
+
+
+https://github.com/user-attachments/assets/c7d96603-333d-4d84-b45a-002e69c39c17
+
+
 ## How It Works
 1. **AI Model**: A Convolutional Neural Network (CNN) trained on a dataset of 10,000 images predicts the longitude and latitude.
 2. **Game Modes**: Choose between AI vs Human or Solo mode to start guessing locations based on the provided images.
