@@ -176,3 +176,18 @@ def model_predictions(img):
     model=load_model('artifacts\\training\\model.keras')
     result=model.predict(image)
     return result[0][0],result[0][1]
+def deg_to_rad(degrees):
+   return degrees*(np.pi/180)
+def dist(lat1,lon1,lat2,lon2):
+   R=6371 
+   d_lat=deg_to_rad(lat2-lat1)
+   d_lon=deg_to_rad(lon2-lon1)
+   a=np.sin(d_lat/2)**2+ np.cos(deg_to_rad(lat1))* np.cos(deg_to_rad(lat2))*np.sin(d_lon/2)**2
+   c=2*np.arctan2(np.sqrt(a),np.sqrt(1-a))
+   return R*c
+def random_trash_talk():
+   trash_talk_statement=['Better luck next time kid'," I don't want a sparing partner do better next time","I almost feel bad for how easy that was... almost.",
+    "Guess you missed the tutorial on how to win!",
+    "That game was like taking candy from a baby—except the baby had more fight!",
+    "Don’t worry, losing builds character… and it looks like you’re getting plenty of both." ]
+   return random.choice(trash_talk_statement)

@@ -57,7 +57,7 @@ class Training:
             steps_per_epoch=self.steps_per_epoch,
             validation_steps=self.validation_steps,
             validation_data=self.valid_generator,
-            callbacks=tf.keras.callbacks.ModelCheckpoint('content/best_model/model.keras', save_best_only=True, monitor='val_loss', mode='min')
+            callbacks=tf.keras.callbacks.ModelCheckpoint(self.config.trained_model_path, save_best_only=True, monitor='val_loss', mode='min')
             
 
 
@@ -65,10 +65,7 @@ class Training:
 
         )
 
-        self.save_model(
-            path=self.config.trained_model_path,
-            model=self.model
-        )
+       
     
 
 

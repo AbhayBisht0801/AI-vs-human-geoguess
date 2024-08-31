@@ -55,12 +55,51 @@
         .ai-icon::before {
             content: "🤖"; /* Robot face character */
         }
+        .verdict-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .verdict-message {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+            background-color: #e0ffe0;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .trash-talk-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .trash-talk {
+            font-size: 20px;
+            color: #dc3545;
+            background-color: #ffe0e0;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: trashTalkAnimation 1s ease-in-out infinite;
+        }
+        @keyframes trashTalkAnimation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <div id="coords">Click on the map to get coordinates.</div>
- 
+    
+    <div class="trash-talk-container">
+        {% if trash_talk %}
+            <div class="trash-talk">{{ trash_talk }}</div>
+        {% else %}
+            <div class="trash-talk">🤖: Let's have another game!</div>
+        {% endif %}
+    </div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -132,17 +171,6 @@
     <form action="{{ url_for('home') }}" method="GET">
         <button type="submit">Return to Home</button>
     </form>
-    <form>
-    {% block content %}
-    {% if block %}
-        <h3>{{ Verdict }}</h3>
-        {% if trash_talk is none %}
-            <h4>🤖: Let's have another game</h4>
-        {% else %}
-            <h4>{{ trash_talk }}</h4>
-        {% endif %}
-    {% endif %}
-    {% endblock %}
-    </form>
+
 </body>
 </html>
