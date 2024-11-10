@@ -37,7 +37,7 @@ https://github.com/user-attachments/assets/c7d96603-333d-4d84-b45a-002e69c39c17
 3. **Install the Dataset**
    Run the data ingestion script to set up the dataset:
    ```bash
-   python pipeline/data_ingestion.py
+   python main.py
    ```
 
 4. **Run the Flask Application**
